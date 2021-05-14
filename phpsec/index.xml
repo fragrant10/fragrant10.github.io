@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>fragrant10 的博客</title>
-    <link>https://fragrant10.github.io/</link>
-    <description>Recent content on fragrant10 的博客</description>
+    <title>Phpsecs on fragrant10 的博客</title>
+    <link>https://fragrant10.github.io/phpsec/</link>
+    <description>Recent content in Phpsecs on fragrant10 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 14 May 2021 21:36:49 +0800</lastBuildDate><atom:link href="https://fragrant10.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 May 2021 21:36:49 +0800</lastBuildDate><atom:link href="https://fragrant10.github.io/phpsec/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Php反序列化深度学习</title>
       <link>https://fragrant10.github.io/phpsec/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
@@ -14,15 +14,6 @@
       
       <guid>https://fragrant10.github.io/phpsec/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
       <description>php反序列化深度学习 序列化与反序列化 序列化 serialize — 产生一个可存储的值的表示 serialize() 返回字符串，此字符串包含了表示 value 的字节流，可以存储于任何地方。 这有</description>
-    </item>
-    
-    <item>
-      <title>Kubuntu</title>
-      <link>https://fragrant10.github.io/posts/kubuntu/</link>
-      <pubDate>Thu, 13 May 2021 22:16:07 +0800</pubDate>
-      
-      <guid>https://fragrant10.github.io/posts/kubuntu/</guid>
-      <description>记录Kubuntu日常常用的小技巧：剪切板、触摸板手势、ldx安装kali、乱码reset 内容copy到剪切板或者鼠标滚轮键 安装软件sudo</description>
     </item>
     
   </channel>

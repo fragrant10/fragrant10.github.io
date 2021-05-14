@@ -2,4 +2,6 @@
 
   
 
-[{"categories":["实用工具"],"description":"记录Kubuntu日常常用的小技巧：剪切板、触摸板手势、ldx安装kali、乱码reset 内容copy到剪切板或者鼠标滚轮键 安装软件sudo","tags":["kubuntu"],"title":"Kubuntu","url":"https://fragrant10.github.io/posts/kubuntu/"}]
+  
+
+[{"categories":["php安全"],"description":"php反序列化深度学习 序列化与反序列化 序列化 serialize — 产生一个可存储的值的表示 serialize() 返回字符串，此字符串包含了表示 value 的字节流，可以存储于任何地方。 这有","tags":["serialize","unserialize"],"title":"Php反序列化深度学习","url":"https://fragrant10.github.io/phpsec/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"},{"categories":["实用工具"],"description":"记录Kubuntu日常常用的小技巧：剪切板、触摸板手势、ldx安装kali、乱码reset 内容copy到剪切板或者鼠标滚轮键 安装软件sudo","tags":["kubuntu"],"title":"Kubuntu","url":"https://fragrant10.github.io/posts/kubuntu/"}]
