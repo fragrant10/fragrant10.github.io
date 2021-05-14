@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>实用工具 on fragrant10 的博客</title>
-    <link>fragrant10.kithrt.site/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/</link>
+    <link>https://fragrant10.github.io/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/</link>
     <description>Recent content in 实用工具 on fragrant10 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 13 May 2021 22:16:07 +0800</lastBuildDate><atom:link href="fragrant10.kithrt.site/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 May 2021 22:16:07 +0800</lastBuildDate><atom:link href="https://fragrant10.github.io/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kubuntu</title>
-      <link>fragrant10.kithrt.site/posts/kubuntu/</link>
+      <link>https://fragrant10.github.io/posts/kubuntu/</link>
       <pubDate>Thu, 13 May 2021 22:16:07 +0800</pubDate>
       
-      <guid>fragrant10.kithrt.site/posts/kubuntu/</guid>
+      <guid>https://fragrant10.github.io/posts/kubuntu/</guid>
       <description>记录Kubuntu日常常用的小技巧：剪切板、触摸板手势、ldx安装kali、乱码reset 内容copy到剪切板或者鼠标滚轮键 安装软件sudo</description>
     </item>
     
