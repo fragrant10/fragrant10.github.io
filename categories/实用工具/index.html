@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>All Categories | fragrant10 的博客</title>
+    <title>实用工具 | fragrant10 的博客</title>
 
     
 <link href="/me/favicon.ico" rel="shortcut icon" type="image/x-icon" />
@@ -19,19 +19,19 @@
 
 <meta name="generator" content="Hugo 0.83.1" />
 
-<link rel="canonical" href="fragrant10.kithrt.site/categories/" />
+<link rel="canonical" href="fragrant10.kithrt.site/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/" />
 
 
-<meta property="og:title" content="Categories" />
+<meta property="og:title" content="实用工具" />
 <meta property="og:description" content="fragrant10 的生活记录～" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="fragrant10.kithrt.site/categories/" />
+<meta property="og:url" content="fragrant10.kithrt.site/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/" />
 
 
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Categories"/>
+<meta name="twitter:title" content="实用工具"/>
 <meta name="twitter:description" content="fragrant10 的生活记录～"/>
 
 
@@ -172,25 +172,44 @@
 </header>
 
 
-<div class="ui container">
-  <article class="ui segment dream-categories-section">
-    <h2 class="ui header">All Categories<div class="ui grey sub header">
-        1 category
-      </div>
-    </h2>
+<div class="ui relaxed grid dream-grid">
+  
+  
+  <div class="sixteen wide mobile eight wide tablet eight wide computer four wide large screen four wide widescreen column dream-column">
+    <article class="ui attached segment card dream-card">
+  <a class="image" href="fragrant10.kithrt.site/posts/kubuntu/">
+    
+    <img src="/img/cover.jpg" alt="Kubuntu" />
+    
+  </a>
 
-    
-    <h3 class="ui header">
-      <a href="fragrant10.kithrt.site/categories/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/">实用工具</a>&nbsp;1 article</h3>
-    <ul>
-      
-      <li>
-        <a href="fragrant10.kithrt.site/posts/kubuntu/">Kubuntu</a>
-      </li>
-      
-    </ul>
-    
-  </article>
+  <div class="content">
+    <h2 class="ui medium header">
+      <a href="fragrant10.kithrt.site/posts/kubuntu/">Kubuntu</a>
+    </h2>
+    <div class="meta">
+      <p class="date">
+        
+          <span data-format="luxon">2021-05-13T22:16:07&#43;08:00</span>
+        
+      </p>
+    </div>
+    <div class="description">
+      记录Kubuntu日常常用的小技巧：剪切板、触摸板手势、ldx安装kali、乱码reset 内容copy到剪切板或者鼠标滚轮键 安装软件sudo
+    </div>
+  </div>
+
+  <div class="extra content">
+    <div class="author"><img class="ui avatar image" src="/me/favicon.ico" alt="avatar" /><a href="http://fragrant10.kithrt.site" target="_blank">fragrant10</a></div>
+    <div class="reading-time">
+      <i class="clock icon"></i>2 minutes read</div>
+  </div>
+</article>
+
+  </div>
+  
+
+  
 </div>
 
 
@@ -340,7 +359,7 @@
 
 
         var disqus_config = function () {
-          this.page.url = 'fragrant10.kithrt.site\/categories\/';  
+          this.page.url = 'fragrant10.kithrt.site\/categories\/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7\/';  
           this.page.identifier = '/'; 
         };
 
@@ -399,7 +418,29 @@
 <script src="/fragrant10.kithrt.site/js/main.js"></script>
 <script src="/fragrant10.kithrt.site/js/theme.js"></script>
 
-     
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js"></script>
+
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "en" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/fragrant10.kithrt.site/js/imagesloaded.pkgd.min.js"></script>
+<script src="/fragrant10.kithrt.site/js/masonry.pkgd.min.js"></script>
+<script src="/fragrant10.kithrt.site/js/grid.js"></script>
+
 
     
     <div class="ui inverted segment" id="dream-search">
