@@ -1,4 +1,0 @@
-baseURL = 'https://fragrant10.github.io/'
-languageCode = 'en-us'
-title = "Fra's blog"
-theme = 'hugo-theme-stack'
